@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run TetherKit Core Property-Based Tests",
+      "trigger": "PostFileSave",
+      "description": "Runs the fast-check properties (angle wrapping, calibration identity, codec, seq guard, vibration sanitizer, throttle) whenever protocol, sensor or feedback code is saved.",
+      "matcher": "tetherkit-core/src/(protocol|sensors|feedback)/.*\\.ts$",
+      "action": {
+        "type": "command",
+        "command": "pnpm --filter tetherkit-core test:pbt",
+        "timeout": 60
+      }
+    }
+  ]
+}

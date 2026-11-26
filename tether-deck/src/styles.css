@@ -1,0 +1,600 @@
+/* tether-deck — "Spatial Utility" theme on top of tetherkit-core/styles.css */
+:root {
+  --tk-bg: #0b0f17;
+  --tk-accent: #5ce1e6;
+  --tk-accent-fg: #04191b;
+  --deck-surface: #111827;
+  --deck-slide-bg: #0f1522;
+  --deck-laser: #ff2d55;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: var(--tk-bg);
+  color: var(--tk-fg);
+  font-family: var(--tk-font);
+  -webkit-font-smoothing: antialiased;
+}
+.boot {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--tk-muted);
+}
+
+/* ================= desktop host ================= */
+.deck {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+.deck-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--tk-border);
+  background: rgba(11, 15, 23, 0.9);
+  z-index: 5;
+}
+.deck-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.deck-brand__mark {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--tk-accent);
+  box-shadow: 0 0 12px var(--tk-accent);
+  align-self: center;
+}
+.deck-brand__name {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.deck-brand__by {
+  font-size: 0.75rem;
+  color: var(--tk-muted);
+}
+.deck-tabs {
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.25rem;
+  border-radius: 10px;
+  border: 1px solid var(--tk-border);
+}
+.deck-tabs button,
+.dc-modes button {
+  font: 600 0.85rem var(--tk-font);
+  color: var(--tk-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+.deck-tabs button[aria-pressed='true'],
+.dc-modes button[aria-pressed='true'] {
+  background: var(--tk-accent);
+  color: var(--tk-accent-fg);
+}
+.deck-spacer {
+  flex: 1;
+}
+.deck-sibling {
+  color: var(--tk-muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+  border: 1px solid var(--tk-border);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+}
+.deck-sibling:hover {
+  color: #b388ff;
+  border-color: #b388ff;
+}
+.deck-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.deck-stage {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+/* Bottom dock: pairing card on the left, tools on the right, never on top of each other. */
+.deck-dock {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  pointer-events: none;
+  z-index: 4;
+}
+.deck-dock > * {
+  pointer-events: auto;
+}
+.deck-pairing {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.deck-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 0;
+  padding: 0.4rem;
+  background: var(--tk-panel);
+  border: 1px solid var(--tk-border);
+  border-radius: 12px;
+  z-index: 4;
+}
+/* Split-View is open: drop the deck name so the dock fits on one row. */
+.deck-body:has(.tk-emulator) .deck-toolbar__label,
+.deck-body:has(.tk-emulator) .tk-card__slim-text {
+  display: none;
+}
+.deck-toolbar__label {
+  font-size: 0.75rem;
+  color: var(--tk-muted);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 0.3rem;
+}
+.deck-toolbar__count {
+  font: 700 0.8rem var(--tk-mono);
+  min-width: 3ch;
+  text-align: center;
+}
+.deck-chip[aria-pressed='true'] {
+  border-color: var(--tk-accent);
+  color: var(--tk-accent);
+}
+.deck-select {
+  font: 600 0.8rem var(--tk-font);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--tk-fg);
+  border: 1px solid var(--tk-border);
+  border-radius: 10px;
+  padding: 0.4rem;
+}
+.deck-file {
+  position: relative;
+  overflow: hidden;
+}
+.deck-file input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.deck-notice {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  background: rgba(255, 92, 122, 0.15);
+  border: 1px solid var(--tk-error);
+  color: var(--tk-fg);
+  font-size: 0.85rem;
+  z-index: 6;
+}
+
+/* ----- slides ----- */
+.slides {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 1.5rem 5rem 300px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(92, 225, 230, 0.08), transparent 60%), var(--tk-bg);
+}
+/* Once a phone is linked the pairing card collapses, so the slide can use the full width. */
+.deck-stage--linked .slides {
+  padding-left: 1.5rem;
+}
+.slides__stage {
+  position: relative;
+  width: min(100%, calc((100vh - 11rem) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  container-type: inline-size;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6cqi 7cqi;
+  border-radius: 1.4cqi;
+  background:
+    linear-gradient(135deg, rgba(92, 225, 230, 0.06), transparent 40%),
+    var(--deck-slide-bg);
+  border: 1px solid var(--tk-border);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  animation: slide-in 0.35s ease-out;
+  overflow: hidden;
+}
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.2cqi) scale(0.995);
+  }
+}
+.slide__kicker {
+  margin: 0 0 1cqi;
+  font: 700 1.5cqi var(--tk-mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tk-accent);
+}
+.slide__title {
+  margin: 0 0 2cqi;
+  font-size: 5.2cqi;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.slide--title .slide__title {
+  font-size: 9cqi;
+  background: linear-gradient(90deg, #fff, var(--tk-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.slide__lead {
+  margin: 0 0 2.4cqi;
+  font-size: 2.4cqi;
+  color: #b7c2d6;
+  max-width: 80%;
+}
+.slide__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1.5cqi;
+}
+.slide__list li {
+  position: relative;
+  padding-left: 3cqi;
+  font-size: 2.3cqi;
+  line-height: 1.35;
+}
+.slide__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 1.1cqi;
+  height: 1.1cqi;
+  border-radius: 50%;
+  border: 0.3cqi solid var(--tk-accent);
+}
+.slide__p {
+  font-size: 2.2cqi;
+  margin: 0 0 1.4cqi;
+}
+.slide strong {
+  color: var(--tk-accent);
+}
+.slide code {
+  font-family: var(--tk-mono);
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  border-radius: 0.3em;
+  background: rgba(255, 255, 255, 0.07);
+}
+.slide__code {
+  margin: 2cqi 0 0;
+  padding: 1.8cqi 2.2cqi;
+  border-radius: 1cqi;
+  background: #070a10;
+  border: 1px solid var(--tk-border);
+  font: 1.8cqi/1.5 var(--tk-mono);
+  color: #c9f7f9;
+  overflow: hidden;
+}
+.slide__code code {
+  background: none;
+  padding: 0;
+}
+.slide__footer {
+  position: absolute;
+  left: 7cqi;
+  right: 7cqi;
+  bottom: 3cqi;
+  display: flex;
+  justify-content: space-between;
+  font: 1.3cqi var(--tk-mono);
+  color: var(--tk-muted);
+}
+.laser-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ----- 3D inspector ----- */
+.inspector,
+.inspector__viewport {
+  position: absolute;
+  inset: 0;
+}
+.inspector__viewport canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+.inspector__viewport canvas:active {
+  cursor: grabbing;
+}
+.inspector__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.inspector__label {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: grid;
+  gap: 0.2rem;
+}
+.inspector__name {
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+.inspector__sub {
+  font-size: 0.8rem;
+  color: var(--tk-muted);
+}
+.inspector__hint {
+  margin: 0.4rem 0 0;
+  max-width: 340px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--tk-muted);
+}
+.inspector__aim {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 1px solid var(--tk-border);
+  background:
+    linear-gradient(var(--tk-border), var(--tk-border)) center / 1px 100% no-repeat,
+    linear-gradient(var(--tk-border), var(--tk-border)) center / 100% 1px no-repeat,
+    var(--tk-panel);
+  display: grid;
+  place-items: center;
+}
+.inspector__aim-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--tk-muted);
+}
+.inspector__aim-dot[data-live='1'] {
+  background: var(--tk-accent);
+  box-shadow: 0 0 10px var(--tk-accent);
+}
+.inspector__aim-dot[data-held='1'] {
+  background: #fff;
+  box-shadow: 0 0 16px var(--tk-accent), 0 0 4px #fff;
+}
+
+/* ================= phone controller ================= */
+body.is-controller {
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+.dc {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  height: 100dvh;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.dc-banner {
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8rem;
+  color: var(--tk-warn);
+  background: rgba(255, 200, 87, 0.08);
+}
+.dc-modes {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0.6rem 0.75rem 0;
+  padding: 0.25rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--tk-border);
+}
+.dc-modes button {
+  flex: 1;
+  padding: 0.6rem;
+}
+.dc-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem;
+}
+.dc-slide-head,
+.dc-model {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: space-between;
+}
+.dc-model > div {
+  display: grid;
+  gap: 0.15rem;
+}
+.dc-count {
+  font: 800 0.9rem var(--tk-mono);
+  color: var(--tk-accent);
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--tk-accent);
+  border-radius: 8px;
+}
+.dc-title {
+  flex: 1;
+  font-size: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dc-timer {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  background: var(--deck-surface);
+  border: 1px solid var(--tk-border);
+}
+.dc-timer > div {
+  display: grid;
+}
+.dc-timer__label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--tk-muted);
+}
+.dc-timer__value {
+  font: 800 1.35rem var(--tk-mono);
+}
+.dc-timer--low .dc-timer__value {
+  color: var(--tk-error);
+}
+.dc-notes {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.85rem;
+  border-radius: 12px;
+  background: var(--deck-surface);
+  border: 1px solid var(--tk-border);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.dc-notes--swipe {
+  border-style: solid;
+}
+.dc-notes__hint {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: var(--tk-muted);
+}
+.dc-pad {
+  flex: 1;
+  min-height: 160px;
+  display: grid;
+  place-items: end center;
+  padding: 0.6rem;
+}
+.dc-pad--short {
+  flex: 0 0 130px;
+  min-height: 130px;
+}
+.dc-notes {
+  min-height: 4.5em;
+}
+
+/* Short screens (and the Split-View frame): tighter spacing so notes stay readable. */
+@media (max-height: 760px) {
+  .dc-modes {
+    margin-top: 0.4rem;
+  }
+  .dc-main {
+    gap: 0.45rem;
+    padding: 0.5rem 0.75rem;
+  }
+  .dc-timer {
+    padding: 0.4rem 0.6rem;
+  }
+  .dc-timer__value {
+    font-size: 1.1rem;
+  }
+  .dc-notes {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+  .dc-pad--short {
+    flex-basis: 96px;
+    min-height: 96px;
+  }
+  .dc-footer {
+    gap: 0.45rem;
+    padding: 0.5rem 0.75rem;
+  }
+  .dc-big {
+    padding: 0.7rem;
+  }
+}
+.dc-pad__hint {
+  font-size: 0.75rem;
+  color: var(--tk-muted);
+  pointer-events: none;
+}
+.dc-footer {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+.dc-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+.dc-big {
+  padding: 1rem;
+  font-size: 1rem;
+}
+.tk-connect__code {
+  font-size: 1.6rem;
+}

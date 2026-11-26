@@ -1,0 +1,37 @@
+{
+  "name": "tetherkit-core",
+  "version": "0.1.0",
+  "description": "TetherKit skeleton SDK: QR pairing, WebRTC dual DataChannel with WebSocket relay fallback, sensor pipeline, haptic/audio feedback and a split-view phone emulator.",
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./react": "./src/react/index.ts",
+    "./signal": "./src/transport/signal-types.ts",
+    "./styles.css": "./src/react/tetherkit.css"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest --run",
+    "test:pbt": "vitest --run tests/",
+    "size": "node scripts/size.mjs",
+    "build": "tsc -p tsconfig.json && node scripts/size.mjs"
+  },
+  "dependencies": {
+    "qrcode-generator": "^2.0.4"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "esbuild": "^0.28.2",
+    "fast-check": "^4.10.3",
+    "react": "^19.3.1",
+    "typescript": "~5.9.3",
+    "vitest": "^5.1.1"
+  }
+}

@@ -1,0 +1,802 @@
+/* phantom-beam — "Gothic Phosphor / EMF Radar" theme on top of tetherkit-core/styles.css */
+:root {
+  --tk-bg: #030405;
+  --tk-panel: rgba(6, 12, 9, 0.88);
+  --tk-panel-solid: #070b09;
+  --tk-border: rgba(57, 255, 136, 0.18);
+  --tk-fg: #d9ffe8;
+  --tk-muted: #6f8f7d;
+  --tk-accent: #39ff88;
+  --tk-accent-fg: #021208;
+  --tk-font: 'Courier New', ui-monospace, 'SF Mono', Menlo, monospace;
+  --pb-uv: #9b5cff;
+  --pb-blood: #ff2a4a;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: var(--tk-bg);
+  color: var(--tk-fg);
+  font-family: var(--tk-font);
+}
+.boot {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--tk-accent);
+  letter-spacing: 0.2em;
+}
+
+/* ================= desktop host ================= */
+.pb-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+.pb {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+.pb-stage,
+.pb-stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.pb-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.75) 100%);
+  box-shadow: inset 0 0 calc(40px + 160px * var(--pb-danger, 0)) rgba(255, 20, 50, calc(0.55 * var(--pb-danger, 0)));
+  transition: box-shadow 0.3s;
+}
+.pb-vignette.is-touching {
+  animation: pb-throb 0.45s ease-in-out infinite;
+  box-shadow: inset 0 0 220px rgba(255, 20, 50, 0.75);
+}
+@keyframes pb-throb {
+  50% {
+    box-shadow: inset 0 0 120px rgba(255, 20, 50, 0.45);
+  }
+}
+.pb-uv-tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(155, 92, 255, 0.18), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.pb-uv-tint.is-on {
+  opacity: 1;
+}
+.pb-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
+
+/* Film grain: one tiny inline SVG noise tile, opacity follows --pb-fear so the
+   image gets dirtier as the EMF rises. No image files shipped. */
+.pb-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: calc(0.06 + 0.2 * var(--pb-fear, 0));
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='120' height='120' filter='url(%23n)' opacity='0.55'/></svg>");
+  background-size: 120px 120px;
+  animation: pb-grain-shift 0.6s steps(3) infinite;
+}
+@keyframes pb-grain-shift {
+  0% {
+    background-position: 0 0;
+  }
+  33% {
+    background-position: -40px 20px;
+  }
+  66% {
+    background-position: 25px -35px;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* Chromatic aberration: a red/cyan edge split that breathes with --pb-fear. */
+.pb-aberration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: calc(0.1 + 0.5 * var(--pb-fear, 0));
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(255, 0, 60, 0.5) 100%),
+    radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(0, 220, 255, 0.35) 100%);
+  background-position: calc(1px + 3px * var(--pb-fear, 0)) 0, calc(-1px - 3px * var(--pb-fear, 0)) 0;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: pb-aberration-wobble 3.2s ease-in-out infinite;
+}
+@keyframes pb-aberration-wobble {
+  50% {
+    filter: hue-rotate(8deg);
+  }
+}
+
+.pb-top {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(rgba(0, 0, 0, 0.75), transparent);
+  z-index: 5;
+}
+.pb-brand {
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  color: var(--tk-accent);
+  text-shadow: 0 0 10px rgba(57, 255, 136, 0.7);
+}
+.pb-brand span {
+  color: var(--pb-uv);
+  margin: 0 0.2em;
+}
+.pb-stats {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+.pb-stat {
+  display: grid;
+  gap: 0.15rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(57, 255, 136, 0.45);
+}
+.pb-stat small {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--tk-muted);
+}
+.pb-stat.is-alert {
+  color: var(--pb-blood);
+  animation: pb-blink 0.6s steps(2) infinite;
+}
+@keyframes pb-blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+.pb-bar {
+  display: block;
+  width: 120px;
+  height: 8px;
+  border: 1px solid var(--tk-accent);
+  padding: 1px;
+}
+.pb-bar span {
+  display: block;
+  height: 100%;
+  background: var(--tk-accent);
+  box-shadow: 0 0 8px var(--tk-accent);
+  transition: width 0.2s;
+}
+.pb-leds {
+  display: flex;
+  gap: 3px;
+}
+.pb-leds i {
+  width: 10px;
+  height: 14px;
+  background: rgba(57, 255, 136, 0.12);
+}
+.pb-leds i.on:nth-child(1) {
+  background: #39ff88;
+}
+.pb-leds i.on:nth-child(2) {
+  background: #b6ff3b;
+}
+.pb-leds i.on:nth-child(3) {
+  background: #ffd23b;
+}
+.pb-leds i.on:nth-child(4) {
+  background: #ff8a2a;
+}
+.pb-leds i.on:nth-child(5) {
+  background: #ff2a4a;
+  animation: pb-blink 0.3s steps(2) infinite;
+}
+.pb-spacer {
+  flex: 1;
+}
+.pb-volume {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.pb-volume input {
+  width: 90px;
+  accent-color: var(--tk-accent);
+}
+.pb-sibling {
+  color: var(--tk-muted);
+  font-size: 0.8rem;
+  text-decoration: none;
+  border: 1px solid var(--tk-border);
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+}
+.pb-sibling:hover {
+  color: #5ce1e6;
+  border-color: #5ce1e6;
+}
+
+.pb-lock {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  transform: translateX(-50%);
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  color: var(--pb-uv);
+  font-weight: 900;
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  text-shadow: 0 0 12px var(--pb-uv);
+  z-index: 3;
+}
+.pb-lock__bar {
+  width: 140px;
+  height: 6px;
+  border: 1px solid var(--pb-uv);
+}
+.pb-lock__bar span {
+  display: block;
+  height: 100%;
+  background: var(--pb-uv);
+  box-shadow: 0 0 12px var(--pb-uv);
+}
+
+.pb-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.85));
+  z-index: 4;
+}
+.pb-title {
+  margin: 0;
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  letter-spacing: 0.18em;
+  color: var(--tk-accent);
+  text-shadow: 0 0 18px rgba(57, 255, 136, 0.8), 0 0 60px rgba(57, 255, 136, 0.35);
+  animation: pb-flicker 4s infinite;
+}
+.pb-overlay--lost .pb-title {
+  color: var(--pb-blood);
+  text-shadow: 0 0 18px rgba(255, 42, 74, 0.8), 0 0 60px rgba(255, 42, 74, 0.35);
+}
+.pb-overlay--won .pb-title {
+  color: #e9dcff;
+  text-shadow: 0 0 18px var(--pb-uv), 0 0 60px var(--pb-uv);
+}
+@keyframes pb-flicker {
+  0%,
+  92%,
+  100% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 0.4;
+  }
+  95% {
+    opacity: 0.9;
+  }
+  96% {
+    opacity: 0.2;
+  }
+}
+.pb-sub {
+  margin: 0;
+  color: var(--tk-muted);
+  font-size: 1.05rem;
+}
+.pb-howto {
+  text-align: left;
+  max-width: 560px;
+  margin: 0.5rem 0;
+  line-height: 1.6;
+  color: var(--tk-fg);
+}
+.pb-howto b {
+  color: var(--pb-uv);
+}
+.pb-cta {
+  font: 900 1.1rem var(--tk-font);
+  letter-spacing: 0.3em;
+  padding: 1rem 2.4rem;
+  color: var(--tk-accent-fg);
+  background: var(--tk-accent);
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 0 30px rgba(57, 255, 136, 0.6);
+}
+.pb-cta:hover {
+  filter: brightness(1.1);
+}
+.pb-cta:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.pb-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--tk-muted);
+}
+.pb-result {
+  display: flex;
+  gap: 2rem;
+  margin: 0.5rem 0 1rem;
+}
+.pb-result div {
+  display: grid;
+  gap: 0.2rem;
+}
+.pb-result dt {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--tk-muted);
+  text-transform: uppercase;
+}
+.pb-result dd {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+.pb-pairing {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 6;
+}
+.pb-audio {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 6;
+  font: 700 0.8rem var(--tk-font);
+  color: var(--tk-fg);
+  background: var(--tk-panel);
+  border: 1px solid var(--tk-border);
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+}
+
+/* ================= phone controller ================= */
+body.is-controller {
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  background:
+    repeating-linear-gradient(0deg, rgba(57, 255, 136, 0.03) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at top, #08140d, #020302 70%);
+}
+.pc {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.pc--touching {
+  animation: pc-shake 0.18s infinite;
+}
+@keyframes pc-shake {
+  25% {
+    transform: translate(1px, -1px);
+  }
+  75% {
+    transform: translate(-1px, 1px);
+  }
+}
+.pc-banner {
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8rem;
+  color: #ffd23b;
+}
+.emf {
+  margin: 0.75rem;
+  padding: 0.75rem 0.75rem 0.6rem;
+  border: 1px solid var(--tk-border);
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--tk-accent);
+  box-shadow: inset 0 0 30px rgba(57, 255, 136, 0.06);
+}
+.emf--max {
+  border-color: var(--pb-blood);
+  box-shadow: inset 0 0 40px rgba(255, 42, 74, 0.25);
+}
+.emf__gauge {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.emf__needle {
+  transform-origin: 100px 110px;
+  transform-box: view-box;
+  transition: transform 90ms linear;
+}
+.emf__leds {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 0.5rem;
+}
+.emf__led {
+  height: 18px;
+  background: color-mix(in srgb, var(--led) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--led) 40%, transparent);
+}
+.emf__led.is-on {
+  background: var(--led);
+  box-shadow: 0 0 14px var(--led);
+}
+.emf__led.is-blink {
+  animation: pb-blink 0.25s steps(2) infinite;
+}
+.emf__readout {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--tk-muted);
+}
+.emf__readout b {
+  font-size: 1.6rem;
+  color: var(--tk-accent);
+  letter-spacing: 0.05em;
+}
+.pc-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+  margin: 0 0.75rem;
+}
+.pc-stats span {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.45rem;
+  border: 1px solid var(--tk-border);
+  font-weight: 700;
+  text-align: center;
+}
+.pc-stats small {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--tk-muted);
+}
+.pc-stats .is-alert {
+  color: var(--pb-blood);
+}
+.pc-pad {
+  flex: 1;
+  min-height: 120px;
+  margin: 0.75rem;
+  display: grid;
+  place-items: end center;
+  padding: 0.6rem;
+  border-color: var(--tk-border);
+}
+.pc-pad__hint {
+  font-size: 0.75rem;
+  color: var(--tk-muted);
+  pointer-events: none;
+}
+.pc-spacer {
+  flex: 1;
+}
+.pc-footer {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+.pc-cta {
+  font: 900 1rem var(--tk-font);
+  letter-spacing: 0.3em;
+  padding: 0.9rem;
+  border: 0;
+  background: var(--tk-accent);
+  color: var(--tk-accent-fg);
+  box-shadow: 0 0 20px rgba(57, 255, 136, 0.5);
+}
+.pc-cta:disabled {
+  opacity: 0.4;
+}
+.pc-result {
+  display: grid;
+  gap: 0.4rem;
+  text-align: center;
+}
+.pc-result strong {
+  font-size: 1.3rem;
+  letter-spacing: 0.15em;
+  color: var(--tk-accent);
+}
+.pc-uv {
+  --tk-accent: var(--pb-uv);
+  --tk-accent-fg: #0b0218;
+  --tk-glow-color: #c3a2ff;
+  min-height: 150px;
+  border-radius: 50% / 40%;
+  font-family: var(--tk-font);
+}
+.pc-uv--locked {
+  box-shadow: 0 0 30px var(--pb-uv);
+  animation: pc-pulse 0.5s ease-in-out infinite;
+}
+@keyframes pc-pulse {
+  50% {
+    box-shadow: 0 0 12px var(--pb-uv);
+  }
+}
+.tk-connect__code {
+  font-size: 1.6rem;
+}
+
+/* ================= v2: walking, scares, phone-as-light ================= */
+.pb-stat.is-walking {
+  color: #c3a2ff;
+}
+.pb-stat.is-walking small::after {
+  content: ' ▲';
+  animation: pb-blink 0.8s steps(2) infinite;
+}
+.pb-toggle {
+  font: 800 0.7rem var(--tk-font);
+  letter-spacing: 0.15em;
+  color: var(--tk-muted);
+  background: transparent;
+  border: 1px solid var(--tk-border);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+.pb-toggle[aria-pressed='true'] {
+  color: var(--pb-blood);
+  border-color: var(--pb-blood);
+}
+
+/* Desktop jump scare: one hard flash, the face lunges at the camera, then fades. */
+.pb-scare {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 20;
+  pointer-events: none;
+  background: #000;
+  animation: pb-scare-bg 1s ease-out forwards;
+}
+.pb-scare img {
+  width: min(92vh, 92vw);
+  height: auto;
+  filter: drop-shadow(0 0 60px rgba(255, 20, 50, 0.6));
+  animation: pb-scare-lunge 1s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+.pb-scare--big,
+.pb-scare--big img {
+  animation-duration: 1.7s;
+}
+@keyframes pb-scare-bg {
+  0% {
+    background: #fff;
+  }
+  6% {
+    background: #300008;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    background: #000;
+  }
+}
+@keyframes pb-scare-lunge {
+  0% {
+    transform: scale(0.35) translateY(8%);
+    opacity: 0;
+  }
+  12% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+  20% {
+    transform: scale(1.18) rotate(-1.5deg);
+  }
+  28% {
+    transform: scale(1.22) rotate(1deg);
+  }
+  70% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+/* Phone screen as a light source (wake lock keeps it on; brightness follows the OS setting). */
+.pc-light {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease-out;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle at 50% 75%, #fbf6ff 0%, #c9a6ff 30%, #8a4dff 70%, #4b1aa8 100%);
+}
+.pc-light.is-uv {
+  opacity: calc(0.55 + var(--pc-progress, 0) * 0.35);
+}
+.pc-light.is-uv.is-locked {
+  opacity: calc(0.75 + var(--pc-progress, 0) * 0.25);
+  animation: pc-uv-surge 0.4s ease-in-out infinite alternate;
+}
+.pc-light.is-touch {
+  opacity: 0.9;
+  background: radial-gradient(circle at 50% 50%, #ffb3be 0%, #ff1a3c 45%, #6a0010 100%);
+  animation: pc-blood 0.5s ease-in-out infinite alternate;
+}
+@keyframes pc-uv-surge {
+  to {
+    filter: brightness(1.25) saturate(1.2);
+  }
+}
+@keyframes pc-blood {
+  from {
+    opacity: 0.95;
+  }
+  to {
+    opacity: 0.45;
+  }
+}
+
+/* Phone jump scare. */
+.pc-scare {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: #000;
+  animation: pb-scare-bg 0.9s ease-out forwards;
+}
+.pc-scare img {
+  width: 120vw;
+  max-width: none;
+  animation: pb-scare-lunge 0.9s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-scare,
+  .pb-scare img,
+  .pc-scare,
+  .pc-scare img,
+  .pc-light,
+  .pb-stat.is-walking small::after {
+    animation: none !important;
+  }
+  .pc-light.is-touch {
+    opacity: 0.7;
+  }
+  .pb-grain,
+  .pb-aberration {
+    animation: none !important;
+  }
+  .pb-reticle.is-locked {
+    animation: none;
+  }
+}
+
+/* Precise 10° target reticle: much smaller than the 24° flashlight cone. */
+.pb-reticle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 74px;
+  height: 74px;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  pointer-events: none;
+  color: rgba(217, 255, 232, 0.45);
+  transition: color 0.1s, filter 0.1s;
+}
+.pb-reticle__ring {
+  position: absolute;
+  inset: 9px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+.pb-reticle i {
+  position: absolute;
+  display: block;
+  background: currentColor;
+  opacity: 0.8;
+}
+.pb-reticle__h {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+}
+.pb-reticle__v {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+}
+.pb-reticle__ring,
+.pb-reticle i {
+  z-index: 2;
+}
+.pb-reticle.is-locked {
+  color: #c3a2ff;
+  filter: drop-shadow(0 0 7px var(--pb-uv));
+  animation: pb-reticle-lock 0.55s ease-in-out infinite alternate;
+}
+@keyframes pb-reticle-lock {
+  to {
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+.pc-haptic {
+  white-space: nowrap;
+  font: 700 0.55rem var(--tk-mono);
+  letter-spacing: 0.08em;
+  color: var(--tk-muted);
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 0.3rem 0.45rem;
+  cursor: pointer;
+}
+.pc-haptic.has-motor {
+  color: var(--tk-accent);
+}
+.pc-haptic.audio-only {
+  color: #ffd23b;
+}

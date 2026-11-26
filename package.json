@@ -1,0 +1,22 @@
+{
+  "name": "tetherkit",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Zero-install skeleton for turning any phone into a motion controller, touchpad and haptic unit for desktop web apps.",
+  "type": "module",
+  "license": "MIT",
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter signaling-relay --filter tether-deck --filter phantom-beam dev",
+    "dev:deck": "pnpm --parallel --filter signaling-relay --filter tether-deck dev",
+    "dev:phantom": "pnpm --parallel --filter signaling-relay --filter phantom-beam dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:pbt": "pnpm --filter tetherkit-core test:pbt",
+    "size": "pnpm --filter tetherkit-core size"
+  }
+}

@@ -1,0 +1,33 @@
+# Deploy from the repository root:
+#   fly launch --no-deploy --config signaling-relay/fly.toml --dockerfile signaling-relay/Dockerfile
+#   fly deploy --config signaling-relay/fly.toml --dockerfile signaling-relay/Dockerfile
+# Rooms live in memory, so run exactly one machine.
+app = "tetherkit-relay"
+primary_region = "sin"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8080"
+  TRUST_PROXY = "1"
+  # Comma-separated list of the deployed app origins, e.g.
+  # ALLOWED_ORIGINS = "https://tether-deck.vercel.app,https://phantom-beam.vercel.app"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    grace_period = "5s"
+    interval = "30s"
+    method = "GET"
+    path = "/healthz"
+    timeout = "3s"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

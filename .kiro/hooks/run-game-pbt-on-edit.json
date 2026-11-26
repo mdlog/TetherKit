@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run phantom-beam Game Rule Properties",
+      "trigger": "PostFileSave",
+      "description": "Runs the phantom-beam fast-check properties (EMF bounds/monotonicity, banish invariants, single ending) whenever the pure game rules are saved.",
+      "matcher": "phantom-beam/src/host/game/.*\\.ts$",
+      "action": {
+        "type": "command",
+        "command": "pnpm --filter phantom-beam test",
+        "timeout": 60
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+packages:
+  - tetherkit-core
+  - signaling-relay
+  - tether-deck
+  - phantom-beam
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@vitest/mocker@5.1.1'
+  - '@vitest/spy@5.1.1'
+  - fast-check@4.10.3
+  - vitest@5.1.1

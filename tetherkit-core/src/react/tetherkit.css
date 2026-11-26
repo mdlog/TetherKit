@@ -1,0 +1,643 @@
+/*
+ * TetherKit base UI. Apps theme it by overriding the custom properties below
+ * on :root (or any ancestor). Class names are prefixed with `tk-`.
+ */
+:root {
+  --tk-font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --tk-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+  --tk-bg: #0b0e14;
+  --tk-panel: rgba(18, 22, 31, 0.92);
+  --tk-panel-solid: #12161f;
+  --tk-border: rgba(255, 255, 255, 0.1);
+  --tk-fg: #e8ecf3;
+  --tk-muted: #8b94a7;
+  --tk-accent: #5ce1e6;
+  --tk-accent-fg: #061417;
+  --tk-ok: #3ddc84;
+  --tk-warn: #ffc857;
+  --tk-error: #ff5c7a;
+  --tk-info: #5aa9ff;
+  --tk-radius: 14px;
+  --tk-glow-color: var(--tk-accent);
+}
+
+/* ---------- primitives ---------- */
+.tk-btn {
+  font: 600 0.9rem/1 var(--tk-font);
+  color: var(--tk-fg);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--tk-border);
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.08s;
+  -webkit-tap-highlight-color: transparent;
+}
+.tk-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+.tk-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.tk-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.tk-btn:focus-visible,
+.tk-hold:focus-visible,
+.tk-icon-btn:focus-visible {
+  outline: 2px solid var(--tk-accent);
+  outline-offset: 2px;
+}
+.tk-btn--primary {
+  background: var(--tk-accent);
+  color: var(--tk-accent-fg);
+  border-color: transparent;
+}
+.tk-btn--primary:hover:not(:disabled) {
+  background: var(--tk-accent);
+  filter: brightness(1.08);
+}
+.tk-btn--ghost {
+  background: transparent;
+}
+.tk-btn--small {
+  padding: 0.45rem 0.65rem;
+  font-size: 0.8rem;
+}
+.tk-btn--xl {
+  width: 100%;
+  padding: 1.1rem 1rem;
+  font-size: 1.1rem;
+  border-radius: 16px;
+}
+.tk-icon-btn {
+  background: none;
+  border: 0;
+  color: var(--tk-muted);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+}
+
+.tk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font: 700 0.7rem/1 var(--tk-mono);
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.tk-badge__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+.tk-badge--ok {
+  color: var(--tk-ok);
+}
+.tk-badge--warn {
+  color: var(--tk-warn);
+}
+.tk-badge--info {
+  color: var(--tk-info);
+}
+.tk-badge--idle {
+  color: var(--tk-muted);
+}
+.tk-badge--idle .tk-badge__dot {
+  box-shadow: none;
+}
+
+.tk-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+.tk-dot--ok {
+  background: var(--tk-ok);
+}
+.tk-dot--warn {
+  background: var(--tk-warn);
+}
+
+.tk-note {
+  font: 0.8rem/1.45 var(--tk-font);
+  color: var(--tk-muted);
+  margin: 0.5rem 0 0;
+}
+.tk-note code {
+  font-family: var(--tk-mono);
+}
+.tk-note--warn {
+  color: var(--tk-warn);
+}
+.tk-note--error {
+  color: var(--tk-error);
+}
+
+.tk-spinner {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid var(--tk-border);
+  border-top-color: var(--tk-accent);
+  animation: tk-spin 0.9s linear infinite;
+}
+@keyframes tk-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- host: pairing card ---------- */
+.tk-card {
+  font-family: var(--tk-font);
+  color: var(--tk-fg);
+  background: var(--tk-panel);
+  border: 1px solid var(--tk-border);
+  border-radius: var(--tk-radius);
+  padding: 1rem;
+  width: 260px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+.tk-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.tk-card__title {
+  font-size: 0.95rem;
+  margin: 0;
+  flex: 1;
+}
+.tk-card__qr {
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 6px;
+  aspect-ratio: 1;
+}
+.tk-card__qr svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.tk-card__qr-placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: #f0f2f5;
+  border-radius: 6px;
+}
+.tk-card__code {
+  font: 800 1.7rem/1 var(--tk-mono);
+  letter-spacing: 0.16em;
+  text-align: center;
+  margin: 0.85rem 0 0.25rem;
+}
+.tk-card__status {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--tk-muted);
+  margin: 0 0 0.75rem;
+  min-height: 1.2em;
+}
+.tk-card__actions {
+  display: grid;
+  gap: 0.5rem;
+}
+.tk-card--slim {
+  width: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.65rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.tk-card__slim-text {
+  font-size: 0.8rem;
+  color: var(--tk-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* ---------- host: telemetry HUD ---------- */
+.tk-hud {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font: 0.75rem/1 var(--tk-mono);
+  color: var(--tk-muted);
+  background: var(--tk-panel);
+  border: 1px solid var(--tk-border);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem 0.3rem 0.35rem;
+  backdrop-filter: blur(8px);
+}
+.tk-hud__metric {
+  white-space: nowrap;
+}
+.tk-hud__metric b {
+  color: var(--tk-fg);
+  font-weight: 700;
+}
+.tk-hud__tag {
+  color: var(--tk-accent);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- host: split-view emulator ---------- */
+.tk-emulator {
+  flex: 0 0 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  background: var(--tk-panel-solid);
+  border-left: 1px solid var(--tk-border);
+  font-family: var(--tk-font);
+  color: var(--tk-fg);
+  min-height: 0;
+}
+.tk-emulator__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+.tk-emulator__title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex: 1;
+}
+.tk-emulator__phone {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  max-width: 360px;
+  max-height: 760px;
+  min-height: 0;
+  border-radius: 38px;
+  border: 10px solid #1c2029;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 24px 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  background: #000;
+}
+.tk-emulator__phone iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.tk-emulator__hint {
+  font-size: 0.75rem;
+  color: var(--tk-muted);
+  text-align: center;
+  margin: 0;
+  max-width: 320px;
+}
+
+/* ---------- controller ---------- */
+.tk-connect {
+  min-height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  max-width: 440px;
+  margin: 0 auto;
+  font-family: var(--tk-font);
+  color: var(--tk-fg);
+}
+.tk-connect__brand {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.tk-connect__brand h1 {
+  margin: 0.4rem 0 0.25rem;
+  font-size: 1.9rem;
+}
+.tk-connect__brand p {
+  margin: 0;
+  color: var(--tk-muted);
+}
+.tk-connect__label {
+  font-size: 0.75rem;
+  color: var(--tk-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.tk-connect__code {
+  font: 800 1.6rem/1 var(--tk-mono);
+  letter-spacing: 0.3em;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 0.8rem;
+  border-radius: 12px;
+  border: 1px solid var(--tk-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--tk-fg);
+}
+
+.tk-statusbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  padding-top: max(0.6rem, env(safe-area-inset-top));
+  font-family: var(--tk-font);
+  color: var(--tk-fg);
+  border-bottom: 1px solid var(--tk-border);
+}
+.tk-statusbar__state {
+  font-size: 0.8rem;
+  color: var(--tk-muted);
+}
+.tk-statusbar__state--connected {
+  color: var(--tk-ok);
+}
+.tk-statusbar__state--error,
+.tk-statusbar__state--host-left {
+  color: var(--tk-warn);
+}
+.tk-statusbar__spacer {
+  flex: 1;
+}
+
+.tk-pad {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  border-radius: var(--tk-radius);
+  border: 1px dashed var(--tk-border);
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+
+.tk-hold {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+  min-height: 120px;
+  border-radius: 24px;
+  border: 2px solid var(--tk-accent);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--tk-fg);
+  font: 800 1.05rem/1.1 var(--tk-font);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.1s, transform 0.08s, box-shadow 0.15s;
+}
+.tk-hold--held {
+  background: var(--tk-accent);
+  color: var(--tk-accent-fg);
+  transform: scale(0.98);
+  box-shadow: 0 0 36px var(--tk-accent);
+}
+.tk-hold:disabled {
+  opacity: 0.4;
+}
+.tk-hold__sub {
+  font-size: 0.7rem;
+  font-weight: 600;
+  opacity: 0.75;
+}
+.tk-hold__label,
+.tk-hold__sub {
+  position: relative;
+  z-index: 1;
+}
+.tk-hold__ring {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 104px;
+  height: 104px;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  pointer-events: none;
+}
+.tk-hold__track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 6;
+}
+.tk-hold__progress {
+  fill: none;
+  stroke: var(--tk-glow-color);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.08s linear;
+}
+
+.tk-pose-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 50%;
+  background: var(--tk-accent);
+  box-shadow: 0 0 14px var(--tk-accent);
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.1s, transform 0.1s;
+}
+.tk-pose-dot[data-held='1'] {
+  opacity: 1;
+  transform: scale(1.35);
+}
+
+.tk-edge-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: inset 0 0 28px 10px var(--tk-glow-color), inset 0 0 90px 18px var(--tk-glow-color);
+  z-index: 50;
+}
+
+/* Short phones and the emulator frame: keep notes and pads visible. */
+@media (max-height: 720px) {
+  .tk-hold {
+    min-height: 92px;
+  }
+}
+
+/* ---------- "linked" moment ---------- */
+.tk-linked {
+  position: fixed;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: 1.5rem 2.2rem;
+  font-family: var(--tk-font);
+  color: var(--tk-fg);
+  background: var(--tk-panel);
+  border: 1px solid var(--tk-accent);
+  border-radius: 20px;
+  box-shadow: 0 0 60px color-mix(in srgb, var(--tk-accent) 45%, transparent);
+  z-index: 60;
+  pointer-events: none;
+  animation: tk-linked-life 2.2s ease-out forwards;
+}
+.tk-linked__phone {
+  position: relative;
+  width: 44px;
+  height: 70px;
+  fill: none;
+  stroke: var(--tk-accent);
+  stroke-width: 3;
+  animation: tk-linked-pop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+.tk-linked__phone circle {
+  fill: var(--tk-accent);
+  stroke: none;
+}
+.tk-linked__rings {
+  position: absolute;
+  left: 50%;
+  top: 1.5rem;
+  width: 70px;
+  height: 70px;
+  transform: translateX(-50%);
+}
+.tk-linked__rings span {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--tk-accent);
+  opacity: 0;
+  animation: tk-linked-ring 1.4s ease-out forwards;
+}
+.tk-linked__rings span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.tk-linked__rings span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.tk-linked__label {
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+}
+@keyframes tk-linked-life {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -54%) scale(0.98);
+  }
+}
+@keyframes tk-linked-pop {
+  from {
+    transform: scale(0.3) rotate(-20deg);
+  }
+}
+@keyframes tk-linked-ring {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+.tk-linked-flash {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.4rem;
+  font-family: var(--tk-font);
+  color: var(--tk-accent-fg);
+  background: radial-gradient(circle, color-mix(in srgb, var(--tk-accent) 95%, #fff), var(--tk-accent) 70%);
+  z-index: 70;
+  pointer-events: none;
+  animation: tk-linked-flash 1.3s ease-out forwards;
+}
+.tk-linked-flash strong {
+  font-size: 2.6rem;
+  letter-spacing: 0.06em;
+}
+.tk-linked-flash span {
+  font: 800 0.9rem var(--tk-mono);
+  letter-spacing: 0.2em;
+}
+@keyframes tk-linked-flash {
+  0% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  65% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* No zoom/flash: the overlays just appear and disappear with the component. */
+  .tk-linked,
+  .tk-linked-flash,
+  .tk-linked__phone,
+  .tk-linked__rings span {
+    animation: none;
+  }
+  .tk-linked__rings {
+    display: none;
+  }
+  .tk-spinner {
+    animation-duration: 3s;
+  }
+  .tk-btn,
+  .tk-hold {
+    transition: none;
+  }
+}

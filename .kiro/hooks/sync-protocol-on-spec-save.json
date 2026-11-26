@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Verify Spec & Protocol Alignment",
+      "trigger": "PostFileSave",
+      "description": "When the tether-protocol spec changes, asks the agent to reconcile the TypeScript protocol, codec validators and property tests with it.",
+      "matcher": "\\.kiro/specs/tether-protocol/(requirements|design)\\.md$",
+      "action": {
+        "type": "agent",
+        "prompt": "The tether-protocol spec was just updated. Compare it with tetherkit-core/src/protocol/types.ts, tetherkit-core/src/protocol/codec.ts and tetherkit-core/src/transport/signal-types.ts. Update types and decodeMessage validators for any added or changed message fields, add or adjust the matching fast-check property in tetherkit-core/tests, keep the Correctness Properties table in design.md in sync, then run `pnpm test:pbt` and `pnpm typecheck` and report the result."
+      }
+    }
+  ]
+}

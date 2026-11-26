@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Guard: /.kiro must stay tracked",
+      "trigger": "PostFileSave",
+      "description": "Kiroween disqualifies submissions whose /.kiro folder is git-ignored. Fails loudly if a .gitignore edit starts ignoring it.",
+      "matcher": "\\.gitignore$",
+      "action": {
+        "type": "command",
+        "command": "if git check-ignore -q .kiro/steering/product.md 2>/dev/null; then echo \"DANGER: /.kiro is now git-ignored. Kiroween rules require it in the repo. Revert the .gitignore change.\" >&2; exit 1; else echo \"OK: /.kiro is tracked.\"; fi",
+        "timeout": 10
+      }
+    }
+  ]
+}

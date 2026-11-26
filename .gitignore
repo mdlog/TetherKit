@@ -1,0 +1,22 @@
+# Dependencies & build output
+node_modules/
+dist/
+*.tsbuildinfo
+coverage/
+
+# Local environment files (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# Local TLS material
+*.pem
+certs/
+
+# Logs & OS noise
+*.log
+.DS_Store
+Thumbs.db
+
+# NOTE: the /.kiro directory is intentionally tracked.
+# Kiroween rules require it at the repo root; do not add it here.
