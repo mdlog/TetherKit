@@ -8,7 +8,7 @@ Deadline: **Friday, Dec 4, 2026, 2:00 PM PT** (Saturday, Dec 5, 05:00 WIB). Subm
 - [x] Two separate app folders: `tether-deck/` and `phantom-beam/`, plus the skeleton in `tetherkit-core/`
 - [x] All source, assets and instructions needed to run (`README.md`, `docs/`)
 - [x] `THIRD_PARTY_NOTICES.md`
-- [ ] Create a **public GitHub** repo (not GitLab or Bitbucket), push, and confirm the license badge and `.kiro/` are visible on github.com
+- [x] Create a **public GitHub** repo (not GitLab or Bitbucket), push, and confirm the license badge and `.kiro/` are visible on github.com: https://github.com/mdlog/TetherKit
 
 ## Working app
 - [ ] Deploy the relay plus both apps over HTTPS ([DEPLOYMENT.md](DEPLOYMENT.md))
@@ -18,9 +18,9 @@ Deadline: **Friday, Dec 4, 2026, 2:00 PM PT** (Saturday, Dec 5, 05:00 WIB). Subm
 ## Devpost form
 - [ ] Category: **Skeleton Crew**
 - [ ] Bonus prizes to tick: Best Demo (automatic), Bonus Blog, Social Blitz. Best Startup / Student only if eligible
-- [ ] Text description: features + how it works (reuse the README intro)
+- [ ] Text description: paste from [DEVPOST.md](DEVPOST.md)
 - [ ] Demo video **< 3:00**, public on YouTube, no copyrighted music or third-party trademarks, shows it running on real devices ([DEMO_SCRIPT.md](DEMO_SCRIPT.md))
-- [ ] "How Kiro was used" write-up ([KIRO_WRITEUP.md](KIRO_WRITEUP.md), edited in your own words)
+- [ ] "How Kiro was used" write-up: paste from [KIRO_WRITEUP.md](KIRO_WRITEUP.md)
 - [ ] Repo URL + app URLs
 
 ## Bonus content (optional)

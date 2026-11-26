@@ -1,174 +1,176 @@
 # Product Requirements Document (PRD): TetherKit
 
-| Atribut Dokumen | Detail |
+> Translated from the original Indonesian. The original wording is in the git history.
+
+| Document Attribute | Detail |
 | --- | --- |
-| Nama Produk | **TetherKit** (Core SDK + `tether-deck` + `phantom-beam`) |
-| Versi Dokumen | 1.0.0 (Hackathon MVP Specification) |
-| Target Kompetisi | **Kiroween 2026** — Kategori Utama: **Skeleton Crew** |
-| Potensi Bonus Target | *Best Demo*, *Bonus Blog Prize*, *Social Blitz Prize* (opsional: *Best Student* / *Best Startup*) |
-| Tenggat Pengumpulan | Jumat, 4 Desember 2026 pukul 14:00 PST (Sabtu, 5 Desember 2026 pukul 05:00 WIB / 06:00 WITA) |
-| Lisensi Proyek | MIT Open Source License |
+| Product Name | **TetherKit** (Core SDK + `tether-deck` + `phantom-beam`) |
+| Document Version | 1.0.0 (Hackathon MVP Specification) |
+| Target Competition | **Kiroween 2026** — Main Category: **Skeleton Crew** |
+| Potential Target Bonuses | Best Demo, Bonus Blog Prize, Social Blitz Prize (optional: Best Student / Best Startup) |
+| Submission Deadline | Friday, 4 December 2026 at 14:00 PST (Saturday, 5 December 2026 at 05:00 WIB / 06:00 WITA) |
+| Project License | MIT Open Source License |
 
 ---
 
-## 1. Ringkasan Eksekutif & Visi Produk
+## 1. Executive Summary & Product Vision
 
-**TetherKit** adalah kerangka kerja (*skeleton code template*) sumber terbuka dan nol-instalasi yang mengubah ponsel pintar apa pun menjadi pengontrol gerak spasial, papan sentuh nirkabel, dan unit umpan balik fisik berlatensi rendah bagi aplikasi web desktop—cukup dengan memindai kode QR di peramban.
+**TetherKit** is an open-source, zero-install framework (skeleton code template) that turns any smartphone into a spatial motion controller, a wireless touchpad, and a low-latency physical feedback unit for desktop web applications—simply by scanning a QR code in the browser.
 
-Berbeda dari solusi pelacakan gestur berbasis kamera web yang menuntut pencahayaan baik, sudut kamera tetap, serta pengunduhan dependensi visi komputer yang berat, TetherKit memanfaatkan **WebRTC DataChannel** dan **sensor bawaan peramban seluler** (giroskop, sentuh multi-jari, audio prosedural, dan getar haptik) untuk membangun tautan dua arah berkecepatan tinggi langsung di peramban modern.
+Unlike webcam-based gesture tracking solutions that require good lighting, a fixed camera angle, and downloading heavy computer vision dependencies, TetherKit uses **WebRTC DataChannel** and **built-in mobile browser sensors** (gyroscope, multi-touch, procedural audio, and haptic vibration) to build a high-speed two-way link directly in modern browsers.
 
-Untuk membuktikan fleksibilitas kerangka inti `tetherkit-core`, repositori ini menyertakan **dua aplikasi yang sangat kontras** dari satu fondasi yang sama:
-1. **`tether-deck` (Aplikasi Produktivitas & Presentasi):** Mengubah ponsel menjadi penunjuk laser giroskopik, pengontrol rotasi model 3D, dan remot presentasi lengkap dengan catatan pembicara serta pengatur waktu langsung di layar ponsel.
-2. **`phantom-beam` (Aplikasi Gim Horor Asimetris Bertema Kiroween):** Menyulap layar desktop menjadi lorong gelap berhantu, sementara ponsel di tangan pemain bertindak sebagai senter fisik dan detektor EMF (*Electromagnetic Field*) yang mengeluarkan denyut audio/visual serta getaran haptik semakin cepat saat mendekati entitas tak kasatmata.
+To prove the flexibility of the core framework `tetherkit-core`, this repository includes **two strongly contrasting applications** built on the same foundation:
+1. **`tether-deck` (Productivity & Presentation App):** Turns the phone into a gyroscopic laser pointer, a 3D model rotation controller, and a presentation remote, complete with speaker notes and a live timer on the phone screen.
+2. **`phantom-beam` (Kiroween-Themed Asymmetric Horror Game App):** Turns the desktop screen into a dark haunted corridor, while the phone in the player's hand acts as a physical flashlight and an EMF (Electromagnetic Field) detector that emits audio/visual pulses and haptic vibrations that get faster as it nears invisible entities.
 
 ---
 
-## 2. Latar Belakang Masalah & Peluang
+## 2. Problem Background & Opportunity
 
-| Masalah Utama | Dampak Terhadap Pengembang & Pengguna | Solusi TetherKit |
+| Main Problem | Impact on Developers & Users | TetherKit Solution |
 | --- | --- | --- |
-| Aplikasi desktop interaktif & demo 3D terikat pada mouse/trackpad | Presentasi produk, inspeksi objek 3D, dan gim web terasa datar dan kurang imersif | Mengubah ponsel yang sudah dimiliki setiap orang menjadi pengontrol 3-DOF/sentuh nirkabel |
-| Pengendali berbasis kamera web (Computer Vision) rapuh | Gagal di ruangan gelap, menguras CPU, dan memicu kekhawatiran privasi kamera | Memakai sensor orientasi/sentuh lokal ponsel tanpa menyalakan kamera maupun mengirim video |
-| Membangun proyek *multi-device* dari nol memakan waktu lama | Pengembang harus menulis ulang kode pairing QR, WebRTC ICE, fallback relay, kalibrasi, dan Wake Lock | Menyediakan kerangka *skeleton* siap pakai (`tetherkit-core`) dengan kontrak skema tervalidasi Kiro Specs |
-| Juri hackathon sering menguji aplikasi hanya dari 1 laptop | Aplikasi dua perangkat kerap tidak bisa dinilai maksimal jika juri enggan mengambil ponsel | Menyediakan **Virtual Phone Split-View Emulator** bawaan sehingga 100% fitur tetap bisa diuji pada satu layar |
+| Interactive desktop apps & 3D demos are tied to the mouse/trackpad | Product presentations, 3D object inspection, and web games feel flat and less immersive | Turns the phone everyone already owns into a wireless 3-DOF/touch controller |
+| Webcam-based controllers (Computer Vision) are fragile | They fail in dark rooms, drain the CPU, and raise camera privacy concerns | Uses the phone's local orientation/touch sensors without turning on the camera or sending video |
+| Building a multi-device project from scratch takes a long time | Developers have to rewrite the code for QR pairing, WebRTC ICE, relay fallback, calibration, and Wake Lock | Provides a ready-to-use skeleton framework (`tetherkit-core`) with schema contracts validated by Kiro Specs |
+| Hackathon judges often test apps from only 1 laptop | Two-device apps often cannot be judged to their full extent if judges are reluctant to pick up a phone | Provides a built-in **Virtual Phone Split-View Emulator** so that 100% of features can still be tested on one screen |
 
 ---
 
-## 3. Kesesuaian Kriteria Penjurian & Kepatuhan Aturan
+## 3. Judging Criteria Fit & Rule Compliance
 
-### 3.1 Pemetaan Terhadap 5 Kriteria Penjurian Kiroween 2026
+### 3.1 Mapping to the 5 Kiroween 2026 Judging Criteria
 
-1. **Potential Impact:** Memberi templat nyata bagi pengembang web untuk membuat gim pesta, alat presentasi interaktif, maupun kontroler instalasi pameran tanpa memerlukan aplikasi toko (*App Store/Play Store*).
-2. **Technological Implementation:** Memanfaatkan **Kiro Spec-Driven Development** (`.kiro/specs/`), **Agent Hooks** (`.kiro/hooks/`), **Steering Docs** (`.kiro/steering/`), dan **Property-Based Testing** (`fast-check`) untuk menjamin keandalan protokol sinkronisasi biner/JSON antara ponsel dan desktop.
-3. **Design:** Antarmuka bersih bergaya *Spatial Utility* pada `tether-deck` dan atmosfer *Gothic Phosphor / EMF Radar* pada `phantom-beam`, lengkap dengan kalibrasi satu ketukan dan HUD latensi real-time.
-4. **Innovation / Idea:** Menyediakan dua arah komunikasi fisik—gerak ponsel mengendalikan kanvas desktop (hulu), dan kondisi spasial desktop memicu sinyal EMF/getar/audio ke ponsel (hilir)—melalui arsitektur nol-instalasi dengan mode emulator bawaan.
-5. **Presentation:** Video demo di bawah 3 menit langsung memperlihatkan *picture-in-picture* tangan memegang ponsel asli menggerakkan model 3D di detik ke-5, berpindah ke senter berhantu di detik ke-20, lalu membedah otomatisasi Kiro.
+1. **Potential Impact:** Gives web developers a real template for building party games, interactive presentation tools, or exhibition installation controllers without requiring a store app (App Store/Play Store).
+2. **Technological Implementation:** Uses **Kiro Spec-Driven Development** (`.kiro/specs/`), **Agent Hooks** (`.kiro/hooks/`), **Steering Docs** (`.kiro/steering/`), and **Property-Based Testing** (`fast-check`) to guarantee the reliability of the binary/JSON synchronization protocol between phone and desktop.
+3. **Design:** A clean Spatial Utility-style interface in `tether-deck` and a Gothic Phosphor / EMF Radar atmosphere in `phantom-beam`, complete with one-tap calibration and a real-time latency HUD.
+4. **Innovation / Idea:** Provides two directions of physical communication—phone motion controls the desktop canvas (upstream), and the desktop's spatial state triggers EMF/vibration/audio signals to the phone (downstream)—through a zero-install architecture with a built-in emulator mode.
+5. **Presentation:** A demo video under 3 minutes that right away shows picture-in-picture of a hand holding a real phone moving a 3D model at second 5, switching to the haunted flashlight at second 20, then dissecting the Kiro automation.
 
-### 3.2 Daftar Periksa Kepatuhan Aturan Kategori *Skeleton Crew*
+### 3.2 Skeleton Crew Category Rule Compliance Checklist
 
-- [ ] Repositori **GitHub publik** (bukan GitLab/BitBucket) dibuat baru antara 30 Oktober – 4 Desember 2026.
-- [ ] Berkas `LICENSE` (MIT) berada di *root* dan terdeteksi pada bagian *About* GitHub.
-- [ ] Folder `/.kiro` berada utuh di *root* proyek dan **tidak** tercantum di `.gitignore`.
-- [ ] Terdapat **dua folder aplikasi terpisah** yang jelas di dalam repositori (`tether-deck/` dan `phantom-beam/`), terpisah dari pustaka inti (`tetherkit-core/`).
-- [ ] Tersedia **Working App URL** publik berbasis **HTTPS** (wajib untuk API sensor perangkat) yang dapat langsung dijalankan juri.
-- [ ] Video demo diunggah publik ke YouTube berdurasi **kurang dari 3 menit**, bebas musik atau merek berhak cipta pihak ketiga.
-- [ ] Berkas `THIRD_PARTY_NOTICES.md` mencantumkan seluruh pustaka sumber terbuka dan aset yang digunakan.
-
----
-
-## 4. Persona Pengguna & Skenario Utama
-
-1. **Raka (Pembicara Teknis / Desainer 3D — Pengguna `tether-deck`):**
-   Ingin memutar model arsitektur 3D dan mengarahkan laser pointer saat presentasi dari jauh tanpa membeli *clicker* fisik mahal, sekaligus melihat sisa waktu dan catatan di genggaman tangannya.
-2. **Dina (Pemain Kasual — Pengguna `phantom-beam`):**
-   Ingin memainkan gim horor singkat 60 detik di laptop bersama teman hanya dengan memindai QR, merasakan sensasi mengayunkan ponsel seperti senter asli di ruangan gelap dengan efek suara dan getar mendebarkan.
-3. **Budi (Pengembang Web — Pengguna `tetherkit-core`):**
-   Ingin menyalin (*fork*) templat bersih yang mudah dipahami dalam 10 menit untuk membuat aplikasi kontroler ponsel kustom miliknya sendiri memakai Kiro IDE.
-4. **Dewan Juri Hackathon (Penguji Cepat < 90 Detik):**
-   Mungkin menguji menggunakan ponsel pribadi dengan memindai QR, ATAU menguji cepat di satu peramban laptop menggunakan tombol **"Launch Split-View Emulator"** tanpa perlu menyentuh ponsel.
+- [ ] A **public GitHub** repository (not GitLab/BitBucket) newly created between 30 October – 4 December 2026.
+- [ ] The `LICENSE` file (MIT) is at the root and detected in the GitHub About section.
+- [ ] The `/.kiro` folder is intact at the project root and is **not** listed in `.gitignore`.
+- [ ] There are **two clearly separate application folders** in the repository (`tether-deck/` and `phantom-beam/`), separate from the core library (`tetherkit-core/`).
+- [ ] A public **HTTPS**-based **Working App URL** (required for device sensor APIs) is available that judges can run directly.
+- [ ] The demo video is uploaded publicly to YouTube with a duration of **less than 3 minutes**, free of third-party copyrighted music or brands.
+- [ ] The `THIRD_PARTY_NOTICES.md` file lists all open-source libraries and assets used.
 
 ---
 
-## 5. Batasan Ruang Lingkup (*Scope Boundaries*)
+## 4. User Personas & Main Scenarios
 
-### 5.1 Masuk Ruang Lingkup MVP (Harus Selesai Sebelum 4 Desember 2026)
-
-* **Core SDK (`tetherkit-core`):** Pairing kode QR + kode ruangan 6-karakter manual, koneksi WebRTC DataChannel (kanal sensor tak berurutan + kanal kontrol andal), *fallback* otomatis ke WebSocket Relay setelah timeout 4 detik, kalibrasi pusat (*recenter*), filter *smoothing* orientasi, mode cadangan *Touch Trackpad* (untuk perangkat tanpa giroskop/WKWebView), manajemen `Screen Wake Lock`, `FeedbackDispatcher` (Vibration API Android + Web Audio + pulsa visual iOS/desktop), dan komponen `VirtualPhoneEmulator`.
-* **App 1 (`tether-deck`):** Mode *3D Spatial Inspector* (Three.js dengan 2 model interaktif bawaan + kontrol rotasi/zoom), Mode *Laser & Slide Deck* (5 slide interaktif bawaan bertema TetherKit/Kiroween + laser trail halus), tampilan catatan pembicara & timer di ponsel, serta HUD metrik latensi/FPS.
-* **App 2 (`phantom-beam`):** Lorong 3D/2.5D gelap dengan sorot kerucut senter real-time, 2 jenis entitas hantu (*Stalker Wraith* & *Shadow Mimic*) dengan AI patroli/mendekat, sistem perhitungan jarak-sudut untuk mengirim intensitas EMF 0.0–1.0 ke ponsel, mekanik tembak *UV Overload* untuk mengusir entitas, kondisi menang/kalah dalam sesi 60 detik, dan kontrol volume/audio.
-
-### 5.2 Di Luar Ruang Lingkup MVP (Ditunda Pasca-Hackathon)
-
-* Dukungan multipemain serentak (> 1 ponsel terhubung ke 1 layar desktop dalam satu sesi).
-* Unggah berkas PPTX/PDF atau berkas `.glb` kustom ke penyimpanan awan permanen (MVP cukup mendukung unggah lokal di memori browser untuk `.glb`/Markdown dan konten bawaan siap pakai).
-* Integrasi akun login/database pengguna (sesi bersifat sementara/*ephemeral* demi kecepatan dan privasi).
+1. **Raka (Technical Speaker / 3D Designer — `tether-deck` User):**
+   Wants to rotate a 3D architectural model and aim a laser pointer while presenting from a distance without buying an expensive physical clicker, while also seeing the remaining time and notes in the palm of the hand.
+2. **Dina (Casual Player — `phantom-beam` User):**
+   Wants to play a short 60-second horror game on a laptop with friends just by scanning a QR code, feeling the sensation of swinging the phone like a real flashlight in a dark room with thrilling sound and vibration effects.
+3. **Budi (Web Developer — `tetherkit-core` User):**
+   Wants to copy (fork) a clean template that is easy to understand within 10 minutes to build a custom phone controller app of their own using Kiro IDE.
+4. **Hackathon Judging Panel (Quick Testers < 90 Seconds):**
+   May test using a personal phone by scanning the QR code, OR test quickly in a single laptop browser using the **"Launch Split-View Emulator"** button without needing to touch a phone.
 
 ---
 
-## 6. Persyaratan Fungsional (Format EARS untuk Kiro Specs)
+## 5. Scope Boundaries
+
+### 5.1 In MVP Scope (Must Be Finished Before 4 December 2026)
+
+* **Core SDK (`tetherkit-core`):** QR code pairing + manual 6-character room code, WebRTC DataChannel connection (unordered sensor channel + reliable control channel), automatic fallback to WebSocket Relay after a 4-second timeout, center calibration (recenter), orientation smoothing filter, Touch Trackpad fallback mode (for devices without a gyroscope/WKWebView), `Screen Wake Lock` management, `FeedbackDispatcher` (Android Vibration API + Web Audio + iOS/desktop visual pulse), and the `VirtualPhoneEmulator` component.
+* **App 1 (`tether-deck`):** 3D Spatial Inspector mode (Three.js with 2 built-in interactive models + rotation/zoom controls), Laser & Slide Deck mode (5 built-in interactive slides themed on TetherKit/Kiroween + a smooth laser trail), speaker notes & timer view on the phone, and a latency/FPS metrics HUD.
+* **App 2 (`phantom-beam`):** A dark 3D/2.5D corridor with a real-time flashlight cone beam, 2 types of ghost entities (Stalker Wraith & Shadow Mimic) with patrol/approach AI, a distance-angle calculation system to send EMF intensity 0.0–1.0 to the phone, a UV Overload shooting mechanic to banish entities, win/lose conditions in a 60-second session, and volume/audio controls.
+
+### 5.2 Out of MVP Scope (Deferred Until After the Hackathon)
+
+* Simultaneous multiplayer support (> 1 phone connected to 1 desktop screen in one session).
+* Uploading PPTX/PDF files or custom `.glb` files to permanent cloud storage (the MVP only needs to support local upload into browser memory for `.glb`/Markdown and ready-to-use built-in content).
+* User login account/database integration (sessions are temporary/ephemeral for speed and privacy).
+
+---
+
+## 6. Functional Requirements (EARS Format for Kiro Specs)
 
 ### 6.1 Core Framework (`tetherkit-core`)
 
-| ID | Persyaratan Fungsional (EARS Notation) | Prioritas |
+| ID | Functional Requirement (EARS Notation) | Priority |
 | --- | --- | --- |
-| FR-CORE-01 | **WHEN** Host desktop membuka sesi baru, **THE SYSTEM SHALL** menghasilkan `roomId` acak minimal 6 karakter beserta `sessionToken` sementara, membuka koneksi ke server *signaling*, dan menampilkan kode QR serta tautan pendek yang dapat disalin. | P0 (Wajib) |
-| FR-CORE-02 | **WHEN** pengguna memindai kode QR dari ponsel atau mengetikkan kode ruangan, **THE SYSTEM SHALL** melakukan negosiasi WebRTC SDP/ICE dan membangun dua *DataChannel*: kanal `sensor` (`ordered: false, maxRetransmits: 0`) dan kanal `control` (`ordered: true`). | P0 (Wajib) |
-| FR-CORE-03 | **IF** koneksi P2P WebRTC gagal tersambung dalam 4.000 ms (misalnya akibat NAT simetris/firewall), **THEN THE SYSTEM SHALL** secara otomatis beralih ke mode `WS_RELAY` melalui server WebSocket tanpa memutus alur pengguna dan memperbarui indikator status transport. | P0 (Wajib) |
-| FR-CORE-04 | **WHEN** pengendali seluler dijalankan pada iOS Safari 13+ dan pengguna menekan tombol **"Connect & Enable Sensors"**, **THE SYSTEM SHALL** memanggil `DeviceOrientationEvent.requestPermission()` tepat di dalam *handler* klik pengguna tersebut. | P0 (Wajib) |
-| FR-CORE-05 | **IF** API izin sensor ditolak pengguna atau tidak tersedia (seperti pada peramban dalam aplikasi `WKWebView` atau desktop), **THEN THE SYSTEM SHALL** mengaktifkan mode **Touch Trackpad Fallback** secara mulus dan menampilkan pesan saran membuka peramban sistem (Safari/Chrome) bila terdeteksi berada di `WKWebView`. | P0 (Wajib) |
-| FR-CORE-06 | **WHEN** pengguna menekan tombol **"Recenter / Zero"** di ponsel, **THE SYSTEM SHALL** menyimpan orientasi saat ini sebagai titik referensi nol relatif (`offsetYaw`, `offsetPitch`, `offsetRoll`) sehingga seluruh gerakan selanjutnya dihitung relatif terhadap posisi nyaman pengguna. | P0 (Wajib) |
-| FR-CORE-07 | **WHEN** pengendali seluler aktif dan terlihat, **THE SYSTEM SHALL** meminta `navigator.wakeLock.request("screen")` (jika didukung peramban) serta meminta ulang kunci layar secara otomatis setiap kali peristiwa `visibilitychange` kembali menjadi `visible`. | P1 (Tinggi) |
-| FR-CORE-08 | **WHEN** Host desktop mengirimkan pesan `FeedbackEvent` (`intensity`, `pattern`), **THE SYSTEM SHALL** memicu `navigator.vibrate()` (dibatasi maksimal 10 elemen dan total < 10.000 ms) pada perangkat yang mendukung, serta memutar pulsa Web Audio API dan kilau tepi layar sebagai pengganti haptik universal pada iOS. | P0 (Wajib) |
-| FR-CORE-09 | **WHEN** penguji di desktop mengeklik tombol **"Try Virtual Phone (Split-View)"**, **THE SYSTEM SHALL** membuka panel sisi berisi antarmuka pengendali seluler nyata yang terhubung ke Host via saluran lokal `BroadcastChannel` menggunakan skema `TetherProtocol` yang identik. | P0 (Wajib) |
+| FR-CORE-01 | **WHEN** the desktop Host opens a new session, **THE SYSTEM SHALL** generate a random `roomId` of at least 6 characters along with a temporary `sessionToken`, open a connection to the signaling server, and display a QR code and a copyable short link. | P0 (Required) |
+| FR-CORE-02 | **WHEN** the user scans the QR code from the phone or types in the room code, **THE SYSTEM SHALL** perform WebRTC SDP/ICE negotiation and establish two DataChannels: the `sensor` channel (`ordered: false, maxRetransmits: 0`) and the `control` channel (`ordered: true`). | P0 (Required) |
+| FR-CORE-03 | **IF** the WebRTC P2P connection fails to connect within 4,000 ms (for example due to symmetric NAT/firewall), **THEN THE SYSTEM SHALL** automatically switch to `WS_RELAY` mode via the WebSocket server without interrupting the user flow and update the transport status indicator. | P0 (Required) |
+| FR-CORE-04 | **WHEN** the mobile controller runs on iOS Safari 13+ and the user presses the **"Connect & Enable Sensors"** button, **THE SYSTEM SHALL** call `DeviceOrientationEvent.requestPermission()` directly inside that user click handler. | P0 (Required) |
+| FR-CORE-05 | **IF** the sensor permission API is denied by the user or unavailable (such as in in-app `WKWebView` browsers or on desktop), **THEN THE SYSTEM SHALL** seamlessly enable **Touch Trackpad Fallback** mode and display a message suggesting opening the system browser (Safari/Chrome) if it detects that it is running in `WKWebView`. | P0 (Required) |
+| FR-CORE-06 | **WHEN** the user presses the **"Recenter / Zero"** button on the phone, **THE SYSTEM SHALL** store the current orientation as the relative zero reference point (`offsetYaw`, `offsetPitch`, `offsetRoll`) so that all subsequent motion is calculated relative to the user's comfortable position. | P0 (Required) |
+| FR-CORE-07 | **WHEN** the mobile controller is active and visible, **THE SYSTEM SHALL** request `navigator.wakeLock.request("screen")` (if supported by the browser) and automatically re-request the screen lock every time the `visibilitychange` event returns to `visible`. | P1 (High) |
+| FR-CORE-08 | **WHEN** the desktop Host sends a `FeedbackEvent` message (`intensity`, `pattern`), **THE SYSTEM SHALL** trigger `navigator.vibrate()` (limited to a maximum of 10 elements and a total of < 10,000 ms) on devices that support it, and play a Web Audio API pulse and a screen-edge glow as a universal haptic substitute on iOS. | P0 (Required) |
+| FR-CORE-09 | **WHEN** a tester on desktop clicks the **"Try Virtual Phone (Split-View)"** button, **THE SYSTEM SHALL** open a side panel containing the real mobile controller interface, connected to the Host via a local `BroadcastChannel` using the identical `TetherProtocol` schema. | P0 (Required) |
 
-### 6.2 Aplikasi 1 — `tether-deck`
+### 6.2 Application 1 — `tether-deck`
 
-| ID | Persyaratan Fungsional (EARS Notation) | Prioritas |
+| ID | Functional Requirement (EARS Notation) | Priority |
 | --- | --- | --- |
-| FR-DECK-01 | **WHEN** `tether-deck` berada dalam mode **Laser & Slides** dan ponsel dimiringkan, **THE SYSTEM SHALL** memetakan perubahan *yaw* dan *pitch* ke koordinat ternormalisasi `(x, y)` dalam rentang `[-1, 1]` dan merender titik laser bercahaya dengan efek jejak (*trail*) pada kanvas di atas slide aktif. | P0 (Wajib) |
-| FR-DECK-02 | **WHEN** pengguna menekan tombol *Next* / *Previous* atau menggeser layar ponsel secara horizontal pada mode presentasi, **THE SYSTEM SHALL** memindahkan slide aktif di desktop dan menyinkronkan nomor slide, catatan pembicara, serta sisa waktu presentasi ke layar ponsel. | P0 (Wajib) |
-| FR-DECK-03 | **WHEN** `tether-deck` berada dalam mode **3D Inspector** dan tombol *Grab / Orbit* di ponsel ditahan sambil memutar pergelangan tangan, **THE SYSTEM SHALL** memutar objek 3D Three.js secara halus pada sumbu yang sesuai dan mendukung geser dua-jari atau tombol zoom untuk memperbesar/memperkecil kamera. | P0 (Wajib) |
-| FR-DECK-04 | **WHEN** pengguna memilih berkas `.glb` lokal atau salah satu dari 2 model bawaan di desktop, **THE SYSTEM SHALL** memuat objek ke adegan 3D tanpa mengirim berkas ke server eksternal dan langsung dapat dikendalikan dari ponsel. | P1 (Tinggi) |
+| FR-DECK-01 | **WHEN** `tether-deck` is in **Laser & Slides** mode and the phone is tilted, **THE SYSTEM SHALL** map changes in yaw and pitch to normalized `(x, y)` coordinates in the range `[-1, 1]` and render a glowing laser dot with a trail effect on a canvas above the active slide. | P0 (Required) |
+| FR-DECK-02 | **WHEN** the user presses the Next / Previous button or swipes the phone screen horizontally in presentation mode, **THE SYSTEM SHALL** move the active slide on the desktop and synchronize the slide number, speaker notes, and remaining presentation time to the phone screen. | P0 (Required) |
+| FR-DECK-03 | **WHEN** `tether-deck` is in **3D Inspector** mode and the Grab / Orbit button on the phone is held while rotating the wrist, **THE SYSTEM SHALL** smoothly rotate the Three.js 3D object on the corresponding axis and support a two-finger swipe or zoom buttons to zoom the camera in/out. | P0 (Required) |
+| FR-DECK-04 | **WHEN** the user selects a local `.glb` file or one of the 2 built-in models on the desktop, **THE SYSTEM SHALL** load the object into the 3D scene without sending the file to an external server, and it can be controlled from the phone right away. | P1 (High) |
 
-### 6.3 Aplikasi 2 — `phantom-beam`
+### 6.3 Application 2 — `phantom-beam`
 
-| ID | Persyaratan Fungsional (EARS Notation) | Prioritas |
+| ID | Functional Requirement (EARS Notation) | Priority |
 | --- | --- | --- |
-| FR-PHAN-01 | **WHEN** sesi permainan `phantom-beam` dimulai, **THE SYSTEM SHALL** merender ruang koridor gelap di desktop dengan kerucut cahaya senter yang mengikuti posisi `(x, y)` dari sensor ponsel secara real-time. | P0 (Wajib) |
-| FR-PHAN-02 | **WHILE** entitas hantu berada di dalam atau dekat lorong permainan, **THE SYSTEM SHALL** menghitung skor kedekatan sudut sorot senter dan jarak entitas menjadi nilai EMF (`0.0` hingga `1.0`) serta mengirimkannya ke ponsel maksimal 15 kali per detik (throttled). | P0 (Wajib) |
-| FR-PHAN-03 | **WHEN** ponsel menerima nilai EMF > `0.15`, **THE SYSTEM SHALL** menggerakkan jarum/bar LED EMF Meter di layar ponsel, mempercepat bunyi detak *Geiger-counter*, dan memicu pulsa haptik/audio dengan interval yang memendek seiring naiknya nilai EMF. | P0 (Wajib) |
-| FR-PHAN-04 | **WHEN** sorot senter tepat mengenai entitas yang terungkap dan pemain menahan tombol **"UV Surge"** di ponsel selama 2,0 detik, **THE SYSTEM SHALL** meningkatkan meter pengusiran hingga 100%, memicu efek disolusi partikel, dan menambah skor pemain. | P0 (Wajib) |
-| FR-PHAN-05 | **WHEN** seluruh target entitas berhasil diusir sebelum waktu 60 detik habis, **THE SYSTEM SHALL** menampilkan layar kemenangan ("AREA PURIFIED"); **IF** integritas kewarasan (*Sanity*) mencapai 0 akibat entitas menyentuh pemain terlalu lama atau waktu habis, **THE SYSTEM SHALL** menampilkan layar kekalahan beserta tombol **"Play Again"** yang disinkronkan antara desktop dan ponsel. | P0 (Wajib) |
+| FR-PHAN-01 | **WHEN** a `phantom-beam` game session starts, **THE SYSTEM SHALL** render a dark corridor space on the desktop with a flashlight light cone that follows the `(x, y)` position from the phone sensor in real time. | P0 (Required) |
+| FR-PHAN-02 | **WHILE** a ghost entity is inside or near the game corridor, **THE SYSTEM SHALL** compute a proximity score from the flashlight beam angle and the entity's distance into an EMF value (`0.0` to `1.0`) and send it to the phone at most 15 times per second (throttled). | P0 (Required) |
+| FR-PHAN-03 | **WHEN** the phone receives an EMF value > `0.15`, **THE SYSTEM SHALL** move the EMF Meter needle/LED bar on the phone screen, speed up the Geiger-counter ticking sound, and trigger haptic/audio pulses at an interval that shortens as the EMF value rises. | P0 (Required) |
+| FR-PHAN-04 | **WHEN** the flashlight beam is squarely on a revealed entity and the player holds the **"UV Surge"** button on the phone for 2.0 seconds, **THE SYSTEM SHALL** raise the banishment meter to 100%, trigger a particle dissolve effect, and add to the player's score. | P0 (Required) |
+| FR-PHAN-05 | **WHEN** all target entities have been banished before the 60 seconds run out, **THE SYSTEM SHALL** display the victory screen ("AREA PURIFIED"); **IF** sanity integrity (Sanity) reaches 0 because an entity touches the player for too long or time runs out, **THE SYSTEM SHALL** display the defeat screen along with a **"Play Again"** button that is synchronized between desktop and phone. | P0 (Required) |
 
 ---
 
-## 7. Persyaratan Non-Fungsional (NFR)
+## 7. Non-Functional Requirements (NFR)
 
-| Kategori | Target Spesifikasi Terukur |
+| Category | Measurable Specification Target |
 | --- | --- |
-| **Latensi End-to-End** | <= 35 ms pada jaringan Wi-Fi lokal (WebRTC P2P); <= 110 ms pada mode fallback `WS_RELAY`. |
-| **Laju Sampling & Render** | Pengiriman sensor dibatasi stabil pada 60 Hz; render kanvas desktop & 3D dijaga >= 60 FPS pada laptop standar. |
-| **Kompatibilitas Peramban** | **Host Desktop:** Chrome 110+, Edge 110+, Firefox 115+, Safari 16.4+. **Ponsel:** Android Chrome 110+, iOS Safari 17+ (Wake Lock penuh pada iOS 18.4+, dengan degradasi aman pada versi di bawahnya). |
-| **Keamanan & Privasi** | Wajib berjalan di atas **HTTPS/WSS**; tidak menyimpan data sensor di server; `roomId` otomatis kedaluwarsa setelah 15 menit tidak aktif; *rate limit* pesan signaling maksimal 30 permintaan/menit per IP. |
-| **Ketahanan Paket (*Resilience*)** | Paket sensor berurutan nomor (`seq`) lebih kecil dari paket terakhir yang diterima wajib dibuang seketika agar tidak terjadi lonjakan mundur (*jitter spike*). |
-| **Ukuran Bundel** | Paket inti `tetherkit-core` terkompresi < 25 KB (tanpa aset 3D), mudah dibaca sebagai templat *Skeleton Crew*. |
+| **End-to-End Latency** | <= 35 ms on a local Wi-Fi network (WebRTC P2P); <= 110 ms in `WS_RELAY` fallback mode. |
+| **Sampling & Render Rate** | Sensor transmission is capped at a stable 60 Hz; desktop canvas & 3D rendering is kept at >= 60 FPS on a standard laptop. |
+| **Browser Compatibility** | **Desktop Host:** Chrome 110+, Edge 110+, Firefox 115+, Safari 16.4+. **Phone:** Android Chrome 110+, iOS Safari 17+ (full Wake Lock on iOS 18.4+, with safe degradation on versions below that). |
+| **Security & Privacy** | Must run over **HTTPS/WSS**; sensor data is not stored on the server; `roomId` automatically expires after 15 minutes of inactivity; signaling message rate limit of at most 30 requests/minute per IP. |
+| **Packet Resilience** | Sensor packets whose sequence number (`seq`) is lower than the last received packet must be discarded immediately so that backward jumps (jitter spikes) do not occur. |
+| **Bundle Size** | Core package `tetherkit-core` compressed < 25 KB (excluding 3D assets), easy to read as a Skeleton Crew template. |
 
 ---
 
-## 8. Storyboard Video Demo (< 3 Menit — Target 2 Menit 45 Detik)
+## 8. Demo Video Storyboard (< 3 Minutes — Target 2 Minutes 45 Seconds)
 
-Video direkam 1080p 60fps dengan rekaman kamera tangan memegang ponsel asli (*Picture-in-Picture*) agar keajaiban fisiknya langsung terlihat nyata.
+The video is recorded in 1080p 60fps with camera footage of a hand holding a real phone (Picture-in-Picture) so that the physical magic is immediately visible as real.
 
-| Rentang Waktu | Bagian | Visual di Layar & Aksi Nyata | Poin Pesan Narasi |
+| Time Range | Section | On-Screen Visuals & Real Actions | Narration Message Points |
 | --- | --- | --- | --- |
-| **0:00 – 0:15** | **Hook Instan** | Layar desktop menampilkan `tether-deck` 3D model. PiP tangan memegang ponsel memindai QR -> detik ke-5 pergelangan tangan memutar model 3D seketika tanpa menyentuh mouse! | "Tak perlu kamera web atau instalasi aplikasi. Pindai QR, dan ponsel Anda langsung menjadi pengendali spasial 60Hz untuk desktop." |
-| **0:15 – 0:50** | **Demo App 1: `tether-deck`** | Pindah ke mode Laser & Slides: gerakan tangan menyorot poin slide dengan *laser trail*, menekan tombol di ponsel untuk pindah slide sambil memperlihatkan catatan pembicara & timer di layar ponsel. | Menunjukkan nilai guna nyata (*Potential Impact*) untuk presenter, desainer 3D, dan pengembang. |
-| **0:50 – 1:35** | **Demo App 2: `phantom-beam`** | Berpindah ke aplikasi kedua (`phantom-beam`). Lampu ruangan/layar meredup. Gerakan ponsel menyapu koridor gelap; saat mendekati hantu, EMF meter di ponsel menyala merah, bunyi Geiger berdetak kencang, lalu tombol *UV Surge* memusnahkan hantu. | "Satu kerangka kode yang sama melahirkan dua aplikasi kontras—membuktikan kelenturan arsitektur *Skeleton Crew*." |
-| **1:35 – 2:20** | **Bedah Rekayasa Kiro** | Tampilkan struktur folder GitHub (`.kiro/` + `tether-deck/` + `phantom-beam/`). Buka Kiro IDE: ubah 1 aksi baru di `.kiro/specs/tether-protocol/requirements.md`, simpan -> tunjukkan **Agent Hook** memicu pembaruan tipe TypeScript & menjalankan **Property-Based Tests** (`fast-check`) secara otomatis. | Memamerkan kedalaman penggunaan Kiro (Specs EARS, Steering, Agent Hooks, dan PBT) untuk skor *Technological Implementation*. |
-| **2:20 – 2:45** | **Fallback & Penutup** | Klik tombol **"Try Virtual Phone (Split-View)"** di satu layar laptop untuk menunjukkan kemudahan juri menguji tanpa ponsel, lalu tampilkan layar akhir URL repo & demo publik. | "TetherKit: Lean core, dua aplikasi nyata, siap diuji di ponsel maupun satu layar." |
+| **0:00 – 0:15** | **Instant Hook** | The desktop screen shows the `tether-deck` 3D model. PiP of a hand holding a phone scanning the QR -> at second 5 the wrist rotates the 3D model instantly without touching the mouse! | "No webcam or app installation needed. Scan the QR, and your phone instantly becomes a 60Hz spatial controller for the desktop." |
+| **0:15 – 0:50** | **Demo App 1: `tether-deck`** | Switch to Laser & Slides mode: hand movement highlights slide points with the laser trail, pressing a button on the phone changes slides while showing the speaker notes & timer on the phone screen. | Shows real practical value (Potential Impact) for presenters, 3D designers, and developers. |
+| **0:50 – 1:35** | **Demo App 2: `phantom-beam`** | Switch to the second app (`phantom-beam`). Room lights/screen dim. Phone movement sweeps the dark corridor; when nearing a ghost, the EMF meter on the phone glows red, the Geiger sound ticks rapidly, then the UV Surge button destroys the ghost. | "One and the same code framework gives rise to two contrasting apps—proving the flexibility of the Skeleton Crew architecture." |
+| **1:35 – 2:20** | **Kiro Engineering Breakdown** | Show the GitHub folder structure (`.kiro/` + `tether-deck/` + `phantom-beam/`). Open Kiro IDE: change 1 new action in `.kiro/specs/tether-protocol/requirements.md`, save -> show the **Agent Hook** triggering a TypeScript type update & running the **Property-Based Tests** (`fast-check`) automatically. | Shows off the depth of Kiro usage (EARS Specs, Steering, Agent Hooks, and PBT) for the Technological Implementation score. |
+| **2:20 – 2:45** | **Fallback & Closing** | Click the **"Try Virtual Phone (Split-View)"** button on a single laptop screen to show how easily judges can test without a phone, then show the end screen with the repo URL & public demo. | "TetherKit: Lean core, two real apps, ready to be tested on a phone or on a single screen." |
 
 ---
 
-## 9. Peta Jalan Eksekusi 15 Hari (19 November – 4 Desember 2026)
+## 9. 15-Day Execution Roadmap (19 November – 4 December 2026)
 
-| Tanggal | Fase | Deliverable Kunci |
+| Date | Phase | Key Deliverables |
 | --- | --- | --- |
-| **19–20 Nov** | **Inisiasi & Fondasi Kiro** | Daftar Devpost, ajukan 4.000 kredit Kiro (jauh sebelum batas 1 Des), buat repo GitHub publik + lisensi MIT + `/.kiro/` (`steering` & `specs`), jalankan HTTPS dev lokal. |
-| **21–24 Nov** | **Inti `tetherkit-core` & Signaling** | Implementasi server WebSocket signaling + relay, WebRTC dual-channel, kalibrasi giroskop, iOS permission flow, Touch Trackpad fallback, `FeedbackDispatcher`, dan `VirtualPhoneEmulator`. |
-| **25–27 Nov** | **Aplikasi 1 (`tether-deck`)** | Bangun antarmuka presenter & Three.js 3D Inspector, slide engine, laser canvas, dan sinkronisasi timer/catatan. |
-| **28–30 Nov** | **Aplikasi 2 (`phantom-beam`)** | Bangun lorong atmosferik, raycast/shader senter, AI 2 entitas, EMF feedback loop ke ponsel, audio prosedural, dan layar menang/kalah 60 detik. |
-| **1 Des** | **Testing & PBT + Kredit** | Tulis dan luluskan rangkaian Property-Based Testing (`fast-check`), uji fisik di Android + iOS Safari + desktop, pastikan kredit Kiro sudah diproses (batas form 1 Des 12:00 PST). |
-| **2 Des** | **Deployment & Konten Bonus** | Deploy production HTTPS (Frontend + WSS Relay), uji URL publik di Incognito, rekam & unggah video YouTube < 3 menit, terbitkan blog & pos `#KiroweenHackathon26`. |
-| **3–4 Des** | **Audit Akhir & Submit** | Verifikasi `/.kiro/` tidak di-ignore, cek daftar pustaka pihak ketiga, finalisasi pengisian form Devpost minimal 12 jam sebelum **4 Des 14:00 PST (5 Des 05:00 WIB / 06:00 WITA)**. |
+| **19–20 Nov** | **Kiro Initiation & Foundation** | Register on Devpost, apply for 4,000 Kiro credits (well before the 1 Dec deadline), create a public GitHub repo + MIT license + `/.kiro/` (`steering` & `specs`), run local HTTPS dev. |
+| **21–24 Nov** | **`tetherkit-core` Core & Signaling** | Implement the WebSocket signaling + relay server, WebRTC dual-channel, gyroscope calibration, iOS permission flow, Touch Trackpad fallback, `FeedbackDispatcher`, and `VirtualPhoneEmulator`. |
+| **25–27 Nov** | **Application 1 (`tether-deck`)** | Build the presenter interface & Three.js 3D Inspector, slide engine, laser canvas, and timer/notes synchronization. |
+| **28–30 Nov** | **Application 2 (`phantom-beam`)** | Build the atmospheric corridor, flashlight raycast/shader, AI for 2 entities, EMF feedback loop to the phone, procedural audio, and the 60-second win/lose screens. |
+| **1 Dec** | **Testing & PBT + Credits** | Write and pass the Property-Based Testing suite (`fast-check`), test physically on Android + iOS Safari + desktop, make sure the Kiro credits have been processed (form deadline 1 Dec 12:00 PST). |
+| **2 Dec** | **Deployment & Bonus Content** | Deploy production HTTPS (Frontend + WSS Relay), test the public URL in Incognito, record & upload the YouTube video < 3 minutes, publish the blog & the `#KiroweenHackathon26` post. |
+| **3–4 Dec** | **Final Audit & Submit** | Verify `/.kiro/` is not ignored, check the third-party library list, finish filling in the Devpost form at least 12 hours before **4 Dec 14:00 PST (5 Dec 05:00 WIB / 06:00 WITA)**. |
 
 ---
 
-## 10. Matriks Risiko & Strategi Mitigasi
+## 10. Risk Matrix & Mitigation Strategies
 
-| Risiko Teknis / Nonteknis | Dampak | Strategi Mitigasi |
+| Technical / Non-Technical Risk | Impact | Mitigation Strategy |
 | --- | --- | --- |
-| **iOS Safari memblokir sensor tanpa HTTPS atau tanpa klik langsung** | Sensor orientasi bernilai `null` | Wajib HTTPS di dev & prod; ikat `requestPermission()` ke tombol eksplisit; otomatis alihkan ke mode Touch Trackpad jika ditolak. |
-| **Tautan QR dibuka di kamera/WhatsApp WebView (`WKWebView`)** | `requestPermission` tidak tersedia | Deteksi pola User-Agent WebView umum; tampilkan banner panduan "Buka di Safari/Chrome" + langsung aktifkan Touch Trackpad. |
-| **iOS tidak mendukung `navigator.vibrate()`** | Tidak ada efek getar di iPhone | `FeedbackDispatcher` otomatis mengganti/melengkapi dengan detak Web Audio API + kilatan tepi layar sinkron. |
-| **NAT/Firewall kampus/kantor memblokir koneksi WebRTC P2P** | Status tersangkut di *Connecting* | Timeout WebRTC 4 detik otomatis jatuh ke kanal cadangan `WS_RELAY` pada server signaling yang sama. |
-| **Juri tidak memakai ponsel saat menilai** | Hanya melihat layar QR | Tombol **"Open Split-View Emulator"** menanamkan komponen ponsel asli di sebelah kanvas desktop lewat `BroadcastChannel`. |
+| **iOS Safari blocks sensors without HTTPS or without a direct click** | Orientation sensor values are `null` | HTTPS required in dev & prod; bind `requestPermission()` to an explicit button; automatically switch to Touch Trackpad mode if denied. |
+| **QR link opened in a camera/WhatsApp WebView (`WKWebView`)** | `requestPermission` is not available | Detect common WebView User-Agent patterns; show an "Open in Safari/Chrome" guidance banner + immediately enable Touch Trackpad. |
+| **iOS does not support `navigator.vibrate()`** | No vibration effect on iPhone | `FeedbackDispatcher` automatically replaces/supplements it with Web Audio API ticks + synchronized screen-edge flashes. |
+| **Campus/office NAT/Firewall blocks the WebRTC P2P connection** | Status stuck at Connecting | A 4-second WebRTC timeout automatically falls back to the `WS_RELAY` backup channel on the same signaling server. |
+| **Judges do not use a phone when judging** | They only see the QR screen | The **"Open Split-View Emulator"** button embeds the real phone component next to the desktop canvas via `BroadcastChannel`. |

@@ -37,7 +37,7 @@ TetherKit is a lean, MIT-licensed skeleton (`tetherkit-core`) plus two very diff
   - If the gyro permission is denied, or the page runs in an in-app browser, the touch trackpad takes over.
   - If the phone has no vibration API (iOS), a Web Audio click and an edge glow stand in for it.
 - **Sensor math:** pointing is computed from the device's direction vector, not raw Euler angles, so steep tilts don't flip. Deltas are wrapped to ±180°, then smoothed by an adaptive One Euro filter: steady when your hand is still, nearly lag-free when you turn fast. **Recenter** stores your comfortable pose as zero, and in 3D mode every ORBIT grab re-zeroes automatically.
-- **Measured locally** (Chrome, same machine): one-way latency of about 1–3 ms on P2P and relay, and a forced ICE failure falls back to RELAY in about 4.9 s. Core bundle: **12.1 KB gzip** (budget 25 KB).
+- **Measured locally** (Chrome, same machine): one-way latency of about 1–3 ms on P2P and relay, and a forced ICE failure falls back to RELAY in about 4.9 s. Core bundle: **12.6 KB gzip** (budget 25 KB).
 
 ## Quick start
 
@@ -79,7 +79,9 @@ tetherkit-core/   the skeleton SDK (protocol, transport, sensors, feedback, Reac
 signaling-relay/  WebSocket signaling + relay (in-memory rooms, rate limits) + Dockerfile + fly.toml
 tether-deck/      app 1: presenter remote, laser, 3D inspector
 phantom-beam/     app 2: horror flashlight / EMF game + game-rule property tests
-docs/             deployment, testing, demo script, Kiro write-up
+docs/             deployment, testing, demo script, Kiro write-up, Devpost text
+PRD.md            the product requirements (EARS) written before any code
+ARCHITECTURE.md   the system design written alongside the PRD
 ```
 
 ## Build your own controller in 10 minutes
